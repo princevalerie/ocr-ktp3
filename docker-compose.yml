@@ -1,0 +1,51 @@
+# version: "3"
+
+# services:
+#   ocr:
+#     # build:
+#     #   context: .
+#     #   dockerfile: Dockerfile
+#     image: arakattack/ocr-ktp:latest
+#     container_name: ocr
+#     environment:
+#       API_KEY: "vSuv8mPhD5huuQ4CxjNwwQkIe7CFAc3BC1AJ4JDYTvx1QR8O19FD482wm6vvR1ACWP0zSEL2mghOoG6HR8cntFpq8tZmD1HGwfglKvdVdGkzJ3YeMzT33A2HU5aBIK3Z"
+#     restart: unless-stopped
+#     ports:
+#       - "8000:8000"
+#     networks:
+#       - ocr-network
+#     command: gunicorn app:app -w 4 -t 90 --log-level=debug -b 0.0.0.0:8000 --reload --threads 2 --worker-class gevent --keep-alive 5 --timeout 60 --worker-connections 1000
+# networks:
+#   ocr-network:
+#     driver: bridge
+version: "3.8"  # Updated to a more recent version
+
+services:
+  ocr:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: arakattack/ocr-ktp:latest
+    container_name: ocr
+    environment:
+      API_KEY: "vSuv8mPhD5huuQ4CxjNwwQkIe7CFAc3BC1AJ4JDYTvx1QR8O19FD482wm6vvR1ACWP0zSEL2mghOoG6HR8cntFpq8tZmD1HGwfglKvdVdGkzJ3YeMzT33A2HU5aBIK3Z"
+    restart: unless-stopped
+    ports:
+      - "8000:80"  # Map host port 8000 to container port 80
+    networks:
+      - ocr-network
+    command: >
+      gunicorn api:app 
+      --workers 8 
+      --threads 4 
+      --worker-class gevent 
+      --keep-alive 15 
+      --timeout 0 
+      --worker-connections 2000 
+      --bind 0.0.0.0:80 
+      --log-level debug 
+      --reload
+
+networks:
+  ocr-network:
+    driver: bridge

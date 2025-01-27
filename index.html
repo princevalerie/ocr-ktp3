@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upload</title>
+    <script>
+        async function uploadImage(event) {
+            event.preventDefault();
+            const formData = new FormData();
+            const fileInput = document.getElementById('image');
+            formData.append('image', fileInput.files[0]);
+            const response = await fetch('/', {
+                method: 'POST',
+                headers: {
+                    'X-API-KEY': 'YOUR_API_KEY', // Replace with your actual API key
+                },
+                body: formData,
+            });
+            const result = await response.json();
+            document.getElementById('result').innerText = JSON.stringify(result, null, 2);
+        }
+    </script>
+</head>
+<body>
+    <h1>Upload Image for OCR</h1>
+    <form onsubmit="uploadImage(event)">
+        <input type="file" id="image" name="image" accept="image/*" required>
+        <button type="submit">Upload</button>
+    </form>
+    <pre id="result"></pre>
+</body>
+</html>
